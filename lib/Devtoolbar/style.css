@@ -13,41 +13,36 @@
   font-size: 16px;
 }
 
-#devtoolbar,
-#devtoolbarbg {
+#devtoolbar {
   position: absolute;
+  width: 98%;
   bottom: 0;
   z-index: 1000;
-  margin: 0 30px;
+  margin: 0 1%;
   color: #111;
-  display: none; /* Will be brought in via JS */
-}
-
-#devtoolbarbg {
-  z-index: 999;
-  background-color: #CCC;
-  opacity: 0.4;
-}
-
-#devtoolbar {
-  background-color: transparent;
+  background: rgba(204,204,204,0.6);
   box-shadow: 4px 4px 5px #999;
+  display: none; /* Will be brought in via JS */
 }
 
 #devtoolbar > ul {
   list-style-type: none;
+  width: 100%;
+  display: table;
+  margin: 0;
+  padding: 0;
 }
 
 #devtoolbar > ul > li {
-  float: left;
   padding: 15px 20px;
   border-left: 1px solid #CCC;
   cursor: pointer;
   border-top: 2px solid #333;
+  display: table-cell;
 }
 
 #devtoolbar > ul > li:first-child {
-  border-left: none;
+  border-left-style: solid;
 }
 
 #devtoolbar > ul > li:hover {
@@ -56,7 +51,12 @@
 }
 
 #devtoolbar > ul > li.hide:hover {
-  background-color: blue;
+  background-color: #0000A0;
+}
+
+#devtoolbar > ul > li.hide,
+#devtoolbar > ul > li.close {
+  width: 10px;
 }
 
 #devtoolbar > ul > li.show {
@@ -72,6 +72,8 @@
 #devtoolbar > ul > li.active:hover {
   background-color: #D4D4D4;
   color: #000;
+  border-left: 3px solid #333;
+  border-right: 3px solid #333;
 }
 
 #devtoolbar > ul > li > span.indicator {
@@ -91,6 +93,7 @@
 #devtoolbar > #detailpane {
   display: none;
   border-top: 2px solid #333;
+  border-left: 1px solid #CCC;
   background-color: #D4D4D4;
   max-height: 300px;
   overflow-y: scroll;
@@ -110,7 +113,6 @@
 #devtoolbar > #detailpane .tooldetails table * {
   font-family: monospace;
   font-size: 0.9em;
-  background-color: #FFF;
   margin: 5px;
 }
 

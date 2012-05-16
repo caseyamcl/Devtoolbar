@@ -72,8 +72,10 @@ class Devtoolbar {
       $htmlList .= $this->renderNoTools();
     }
     $htmlList .= "<li class='close'>X</li>";
+    
+    $html .= "<div id='devtoolbar'><div id='detailpane'>" . $htmlDetails . "</div><ul class='tools'>" . $htmlList . "</ul></div>";
 
-    return "<div id='devtoolbar'><div id='detailpane'>" . $htmlDetails . "</div><ul class='tools'>" . $htmlList . "</ul></div>";
+    return $html;
   }
 
   // --------------------------------------------------------------
