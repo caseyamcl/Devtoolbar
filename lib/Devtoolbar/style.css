@@ -28,6 +28,8 @@
 
 #devtoolbar {
   background-color: transparent;
+  font-family: Verdana, sans-serif;
+  box-shadow: 4px 4px 5px #999;
 }
 
 #devtoolbar > ul {
@@ -39,7 +41,7 @@
   padding: 15px 20px;
   border-left: 1px solid #CCC;
   cursor: pointer;
-  border-top: 2px solid #990000;
+  border-top: 2px solid #333;
 }
 
 #devtoolbar > ul > li:first-child {
@@ -51,23 +53,46 @@
   color: #FFF;
 }
 
-#devtoolbar .clearfix:after {
-  content: ".";
+#devtoolbar > ul > li.hide:hover {
+  background-color: blue;
+}
+
+#devtoolbar > ul > li.show {
+  padding-left: 2px;
+  padding-right: 2px;
+}
+
+#devtoolbar > ul > li.close:hover {
+  background-color: #990000;
+}
+
+#devtoolbar > ul > li.active,
+#devtoolbar > ul > li.active:hover {
+  background-color: #D4D4D4;
+  color: #000;
+}
+
+#devtoolbar > ul > li > span.indicator {
+  font-family: Georgia, serif;
+  font-weight: bold;
   display: block;
-  clear: both;
-  visibility: hidden;
-  line-height: 0;
-  height: 0;
+  text-align: center;
+  font-size: 22px;
 }
- 
-#devtoolbar .clearfix {
-  display: inline-block;
-}
- 
-html[xmlns] #devtoolbar  .clearfix {
+
+#devtoolbar > ul > li > span.caption {
+  font-size: 14spx;
   display: block;
+  text-align: center;
 }
- 
-* html #devtoolbar .clearfix {
-  height: 1%;
+
+#devtoolbar > #detailpane {
+  display: none;
+  border-top: 2px solid #333;
+  background-color: #D4D4D4;
+  padding: 5px 8px;
+}
+
+#devtoolbar > #detailpane .tooldetails {
+  display: none;
 }
