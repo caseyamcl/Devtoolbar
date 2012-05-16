@@ -91,6 +91,11 @@ abstract class Tool {
     $body_html = '';
     foreach($values as $k => $v) {
       if ($assoc) {
+
+        if ( ! is_scalar($v)) {
+          $v = '[' . ucfirst(gettype($v)) . ']';
+        }
+
         $body_html .= "<tr><th scope='row'>$k</th><td>$v</td></tr>";
       }
       else {
