@@ -9,27 +9,25 @@
  * @license MIT License
  */
 
+
 namespace Devtoolbar\Tools;
 
 /**
- * Session Class for reporting session information
- *
- * Your app should disable this and implement a custom tool if it do not use
- * the standard $_SESSION array
+ * HTTP request information tool
  */
-class Session extends Tool {
+class Request extends Tool {
 
   /**
    * @var string
    */
-  protected static $description = 'Session Values and Statistics';
+  protected static $description = 'HTTP Request Information';
 
   // --------------------------------------------------------------
 
   public function __construct() {
 
-    $this->indicator = isset($_SESSION) ? count($_SESSION) : 'Off';
-    $this->caption   = 'Session Values';
+    $this->indicator = 'HTTP';
+    $this->caption   = 'Request Info';
     $this->details   = $this->getDetails();
 
   }
@@ -37,12 +35,10 @@ class Session extends Tool {
   // --------------------------------------------------------------
 
   private function getDetails() {
-    
-    $html = '<h6>Session Values</h6>';
-    $session_values = array_merge(array('session_id' => session_id()), $_SESSION);
-    $html .= $this->tableize($session_values);
+    $html = "<h6>HTTP \$_SERVER Array</h6>";
+    $html .= $this->tableize($_SERVER);
     return $html;
   }
 }
 
-/* EOF: Session.php */
+/* EOF: Request.php */

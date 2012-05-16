@@ -1,23 +1,58 @@
 <?php
 
+/**
+ * Dev Toolbar - A nifty universal and extensible development toolbar for PHP apps
+ *
+ * @package Devtoolbar
+ * @author  Casey McLaughlin
+ * @link    http://github.com/caseyamcl/Devtoolbar
+ * @license MIT License
+ */
+
 namespace Devtoolbar;
 
+/**
+ * Main Dev Toolbar class
+ */
 class Devtoolbar {
 
   const LISTITEM   = 1;
   const DETAILPANE = 2;
 
+  /**
+   * @var  The directory of this library
+   */
   private $this_dir;
 
+  /**
+   * @var  An array of Tools\Tool objects (keys are tool basename)
+   */
   private $tools = array();
 
-  public function __construct() {
+  // --------------------------------------------------------------
+
+  /**
+   * Constructor
+   *
+   * Optionally disable some built-in tools by passing their basename (e.g. 'Memory' or
+   * 'Session') in via the disableTools array
+   *
+   * @param $disableTools
+   */
+  public function __construct($disableTools = array()) {
+
     $this->dir = __DIR__ . DIRECTORY_SEPARATOR;
-    $this->registerBuiltinTools();
+    $this->registerBuiltinTools($disableTools);
   }
 
   // --------------------------------------------------------------
 
+  /**
+   * Render Devtoolbar HTML
+   *
+   * @param boolean $withStyleAndJs  If TRUE, will return JS and CSS HTML includes
+   * @return string  HTML output
+   */
   public function render($withStyleAndJs = FALSE) {
 
     $html = ($withStyleAndJs) ? $this->renderStyleAndJs : '';
@@ -43,6 +78,15 @@ class Devtoolbar {
 
   // --------------------------------------------------------------
 
+  /**
+   * Render Style and Javascript HTML includes
+   *
+   * Typically, you'll want to call this method to be included in your HTML
+   * header output, but these HTML attributes will technically run in most
+   * browsers if they are included in your <body>
+   *
+   * @return string  HTML Output
+   */
   public function renderStyleAndJs() {
 
     $html = '';
@@ -54,13 +98,26 @@ class Devtoolbar {
 
   // --------------------------------------------------------------
 
-  public function renderNoTools() {
-    return "<li class='notool'>No Tools Installed</li>";
+  /**
+   * HTML to return if no tools exist, or if all tools disabled
+   *
+   * @return string HTML Output
+   */
+  private function renderNoTools() {
+    return "<li class='notool'><span class='msg'>No Tools Installed</span></li>";
   }
 
   // --------------------------------------------------------------
 
-  public function renderTool($toolname, $tool, $which = self::LISTITEM) {
+  /**
+   * Render the HTML for a tool
+   *
+   * @param string $toolname  The toolname (basename of the class e.g. Session or Memory)
+   * @param Tools\Tool $tool  The tool object
+   * @param int $which        Which HTML to render, the listitem or the detail pane
+   * @return string           HTML output
+   */
+  private function renderTool($toolname, $tool, $which = self::LISTITEM) {
 
     $html  = '';
 
@@ -72,7 +129,7 @@ class Devtoolbar {
       case self::LISTITEM:
         $html .= "<span class='indicator'>" . $tool->indicator . "</span>";
         $html .= "<span class='caption'>". $tool->caption . "</span>";
-        $html = "<li class='tool {$toolname}'>" . $html . "</li>";
+        $html = "<li class='tool {$toolname}' title='" . $tool->getDescription() . "'>" . $html . "</li>";
       break;   
     }
 
@@ -101,7 +158,13 @@ class Devtoolbar {
 
   // --------------------------------------------------------------
 
-  private function registerBuiltinTools() {
+  /**
+   * Register built-in tools in the Tools/ subdirectory
+   *
+   * @param array $skipTools  If any tool basename (e.g. Memory or Session) in this array, it will not be loaded
+   * @return int  The number of tools loaded
+   */
+  private function registerBuiltinTools($skipTools = array()) {
 
     $toolDir = __DIR__ . DIRECTORY_SEPARATOR . 'Tools' . DIRECTORY_SEPARATOR;
 
@@ -112,12 +175,15 @@ class Devtoolbar {
         continue;
       }
 
-      $className = 'Devtoolbar\\Tools\\' . substr($file, 0, -4);
+      $baseName = substr($file, 0, -4);
+      $className = 'Devtoolbar\\Tools\\' . $baseName;
 
-      if (class_exists($className)) {
+      if (class_exists($className) && ( ! in_array($baseName, $skipTools))) {
         $this->registerTool(new $className);
       }
     }
+
+    return count($this->tools);
   }
 
 }

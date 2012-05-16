@@ -9,27 +9,25 @@
  * @license MIT License
  */
 
+
 namespace Devtoolbar\Tools;
 
 /**
- * Session Class for reporting session information
- *
- * Your app should disable this and implement a custom tool if it do not use
- * the standard $_SESSION array
+ * Memory usage reporting tools
  */
-class Session extends Tool {
+class Memory extends Tool {
 
   /**
    * @var string
    */
-  protected static $description = 'Session Values and Statistics';
+  protected static $description = 'Memory Usage Metrics';
 
   // --------------------------------------------------------------
 
   public function __construct() {
 
-    $this->indicator = isset($_SESSION) ? count($_SESSION) : 'Off';
-    $this->caption   = 'Session Values';
+    $this->indicator = number_format((memory_get_peak_usage() / 1048576), 2) . 'mb';
+    $this->caption   = 'Memory Usage';
     $this->details   = $this->getDetails();
 
   }
@@ -37,12 +35,16 @@ class Session extends Tool {
   // --------------------------------------------------------------
 
   private function getDetails() {
-    
-    $html = '<h6>Session Values</h6>';
-    $session_values = array_merge(array('session_id' => session_id()), $_SESSION);
-    $html .= $this->tableize($session_values);
+    $html = "<h6>Memory Usage Details</h6>";
+
+    $stats = array(
+      'Memory Usage (bytes)' => memory_get_peak_usage(),
+      'Memory Usage (mb)'    => number_format((memory_get_peak_usage() / 1048576), 2) . 'mb'
+    );
+
+    $html .= $this->tableize($stats);
     return $html;
   }
 }
 
-/* EOF: Session.php */
+/* EOF: Performance.php */
