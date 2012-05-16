@@ -2,19 +2,19 @@
 
 namespace Devtoolbar\Tools;
 
-class Session extends Tool {
+class Performance extends Tool {
 
   /**
    * @var string
    */
-  protected static $description = 'Session Values and Statistics';
+  protected static $description = 'Performance Metrics';
 
   // --------------------------------------------------------------
 
   public function __construct() {
 
-    $this->indicator = isset($_SESSION) ? count($_SESSION) : 'Off';
-    $this->caption   = 'Session Values';
+    $this->indicator = '15mb / 0.3s';
+    $this->caption   = 'Memory &amp; Time';
     $this->details   = $this->getDetails();
 
   }
@@ -22,8 +22,8 @@ class Session extends Tool {
   // --------------------------------------------------------------
 
   private function getDetails() {
-    return "<p>Session Details</p>";
+    return "<p>Perf Details</p>";
   }
 }
 
-/* EOF: Session.php */
+/* EOF: Performance.php */

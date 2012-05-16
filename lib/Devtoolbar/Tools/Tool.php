@@ -1,6 +1,6 @@
 <?php
 
-namespace Tools;
+namespace Devtoolbar\Tools;
 
 abstract class Tool {
 
@@ -28,7 +28,7 @@ abstract class Tool {
   
   public function __get($val) {
 
-    if (isset(self::$$val) {
+    if (isset(self::$$val)) {
       return self::$$val;
     }
     elseif (isset($this->$val)) {

@@ -4,20 +4,44 @@ namespace Devtoolbar;
 
 class Devtoolbar {
 
+  const LISTITEM   = 1;
+  const DETAILPANE = 2;
+
   private $this_dir;
+
+  private $tools = array();
 
   public function __construct() {
     $this->dir = __DIR__ . DIRECTORY_SEPARATOR;
     $this->registerBuiltinTools();
   }
 
+  // --------------------------------------------------------------
+
   public function render($withStyleAndJs = FALSE) {
 
     $html = ($withStyleAndJs) ? $this->renderStyleAndJs : '';
-    $html .= "<div id='devtoolbarbg'>&nbsp;</div>";
-    $html .= "<div id='devtoolbar'><ul><li>aaseawef</li><li>asdfasdfaqwef</li><li>aeq asdf </li><li>basdfaf</li></ul></div>";
-    return $html;
+
+    $htmlList = "<li class='hide'>&laquo;</li>";
+    $htmlDetails = '';
+
+    if (count($this->tools) > 0) {
+
+     foreach($this->tools as $toolname => $tool) {
+        $htmlList .= $this->renderTool($toolname, $tool);
+        $htmlDetails .= $this->renderTool($toolname, $tool, self::DETAILPANE);
+      }
+
+    }
+    else {
+      $htmlList .= $this->renderNoTools();
+    }
+    $htmlList .= "<li class='close'>X</li>";
+
+    return "<div id='devtoolbar'><div id='detailpane'>" . $htmlDetails . "</div><ul class='tools'>" . $htmlList . "</ul></div>";
   }
+
+  // --------------------------------------------------------------
 
   public function renderStyleAndJs() {
 
@@ -28,6 +52,35 @@ class Devtoolbar {
     return $html;
   }
 
+  // --------------------------------------------------------------
+
+  public function renderNoTools() {
+    return "<li class='notool'>No Tools Installed</li>";
+  }
+
+  // --------------------------------------------------------------
+
+  public function renderTool($toolname, $tool, $which = self::LISTITEM) {
+
+    $html  = '';
+
+    switch ($which) {
+
+      case self::DETAILPANE:
+        $html .= "<div class='tooldetails details {$toolname}'>" . $tool->details . "</div>";
+      break;
+      case self::LISTITEM:
+        $html .= "<span class='indicator'>" . $tool->indicator . "</span>";
+        $html .= "<span class='caption'>". $tool->caption . "</span>";
+        $html = "<li class='tool {$toolname}'>" . $html . "</li>";
+      break;   
+    }
+
+    return $html;
+  }
+
+  // --------------------------------------------------------------
+
   /**
    * Register a Tool to Display on the Toolbar
    *
@@ -36,9 +89,17 @@ class Devtoolbar {
    */
   public function registerTool($toolObj) {
 
-    var_dump($toolObj instanceOf Tools\Tool);
+    if ( ! ($toolObj instanceOf Tools\Tool)) {
+      throw new InvalidArgumentException(get_class($toolObj) . " is not an instance of Devtoolbar\Tools\Tool");
+    }
 
+    $tmp = explode('\\', get_class($toolObj));
+    $basename = end($tmp);
+    $this->tools[$basename] = $toolObj;
+    return TRUE;
   }
+
+  // --------------------------------------------------------------
 
   private function registerBuiltinTools() {
 
@@ -51,9 +112,10 @@ class Devtoolbar {
         continue;
       }
 
-      $className = 'Tools\\' . substr($file, 0, -4);
+      $className = 'Devtoolbar\\Tools\\' . substr($file, 0, -4);
+
       if (class_exists($className)) {
-        $this->registerTool($className);
+        $this->registerTool(new $className);
       }
     }
   }
